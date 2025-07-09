@@ -9,8 +9,9 @@ import com.example.lumiai.ui.screens.*
 
 @Composable
 fun LumiNavGraph(navController: NavHostController, viewModel: ChatViewModel) {
-    NavHost(navController, startDestination = "chat") {
-        composable("chat") { ChatScreen(viewModel) }
+    NavHost(navController, startDestination = "start") {
+        composable("start") { StartScreen(navController) }
+        composable("chat") { ChatScreen(navController, viewModel) }
         composable("settings") { SettingsScreen() }
         composable("about") { AboutScreen() }
     }

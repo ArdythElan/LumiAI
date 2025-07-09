@@ -8,15 +8,33 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.lumiai.data.database.ChatMessage
+import com.example.lumiai.utils.NetworkObserver
 import com.example.lumiai.viewmodel.ChatViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(viewModel: ChatViewModel) {
+fun ChatScreen(
+    navController: NavController,
+    viewModel: ChatViewModel
+) {
     val messages by viewModel.messages.collectAsState()
     var input by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val isConnected by NetworkObserver.observe(context).collectAsState(initial = true)
+
+    // Live observer: als verbinding wegvalt, ga automatisch naar StartScreen
+    LaunchedEffect(isConnected) {
+        if (!isConnected) {
+            navController.navigate("start") {
+                popUpTo("chat") { inclusive = true }
+            }
+        }
+    }
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("Lumi AI") }) },
@@ -35,8 +53,14 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 )
                 Button(
                     onClick = {
-                        viewModel.sendMessage(input)
-                        input = ""
+                        if (isConnected && input.isNotBlank()) {
+                            viewModel.sendMessage(input)
+                            input = ""
+                        } else {
+                            navController.navigate("start") {
+                                popUpTo("chat") { inclusive = true }
+                            }
+                        }
                     },
                     enabled = input.isNotBlank()
                 ) {
@@ -70,7 +94,10 @@ fun ChatBubble(message: ChatMessage) {
     ) {
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = bubbleColor
+            color = bubbleColor,
+            modifier = Modifier
+                .fillMaxWidth(0.75f)  // max 75% breedte
+                .padding(2.dp)
         ) {
             Text(
                 text = message.content,
