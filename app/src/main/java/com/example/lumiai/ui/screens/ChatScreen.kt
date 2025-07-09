@@ -19,6 +19,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.Alignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,18 +44,25 @@ fun ChatScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Lumi AI") },
-                actions = {
-                    Image(
-                        painter = rememberAsyncImagePainter("image url here"),
-                        contentDescription = "Profile picture",
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                    )
-                }
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, bottom = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter("https://raw.githubusercontent.com/ArdythElan/LumiAI/refs/heads/main/assets/LumiAI%20Profile%20picture.png"),
+                    contentDescription = "Profile picture",
+                    modifier = Modifier
+                        .size(96.dp)   // echt groot!
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Lumi AI",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
         },
         bottomBar = {
             Row(

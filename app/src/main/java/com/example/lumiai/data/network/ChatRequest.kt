@@ -1,7 +1,7 @@
 package com.example.lumiai.data.network
 
 data class ChatRequest(
-    val model: String = "deepseek/deepseek-r1:free",
+    val model: String = "meta-llama/llama-4-maverick:free", //deepseek/deepseek-r1:free
     val messages: List<Message>
 )
 

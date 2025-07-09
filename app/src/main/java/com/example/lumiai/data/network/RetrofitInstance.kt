@@ -4,11 +4,17 @@ import com.example.lumiai.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitInstance {
     private const val BASE_URL = "https://openrouter.ai/api/"
 
+    private val logging = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
     private val client = OkHttpClient.Builder()
+        .addInterceptor(logging)
         .addInterceptor { chain ->
             val apiKey = BuildConfig.OPENROUTER_API_KEY
             android.util.Log.d("API_KEY_CHECK", "API_KEY = $apiKey")
