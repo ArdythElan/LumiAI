@@ -14,7 +14,7 @@ class ChatRepository(
     fun getAllMessages() = dao.getAllMessages()
 
     suspend fun sendMessage(userMessage: String): String {
-        // Sla het bericht van de gebruiker lokaal op
+        // 1) Sla het bericht van de gebruiker lokaal op
         dao.insertMessage(
             ChatMessage(
                 content = userMessage,
@@ -23,27 +23,37 @@ class ChatRepository(
             )
         )
 
-        // Verstuur naar OpenRouter
-        val response = api.getChatCompletion(
-            ChatRequest(
-                messages = listOf(
-                    Message(role = "user", content = userMessage)
-                )
-            )
+        // 2) Bouw de lijst met messages voor context (optioneel)
+        // Hier sturen we nu alleen het laatste bericht mee, later kun je alle sturen als context
+        val requestMessages = listOf(
+            Message(role = "user", content = userMessage)
         )
 
-        // Haal het antwoord op
+        // 3) Verstuur naar OpenRouter (Retrofit)
+        val response = api.getChatCompletion(
+            ChatRequest(messages = requestMessages)
+        )
+
+        // 4) Haal het antwoord op (eerste choice)
         val botReply = response.choices.firstOrNull()?.message?.content ?: "Sorry, geen antwoord."
 
-        // Sla het antwoord lokaal op
-        dao.insertMessage(
-            ChatMessage(
-                content = botReply,
-                isUser = false,
-                timestamp = System.currentTimeMillis()
-            )
+        // 5) Converteer & sla op als ChatMessage (isUser = false)
+        val chatMessage = ChatMessage(
+            content = botReply,
+            isUser = false,
+            timestamp = System.currentTimeMillis()
         )
+        dao.insertMessage(chatMessage)
 
         return botReply
+    }
+
+    // Optioneel: mapping functie als je later meerdere messages wilt mappen
+    private fun fromNetwork(message: Message): ChatMessage {
+        return ChatMessage(
+            content = message.content,
+            isUser = message.role == "user",
+            timestamp = System.currentTimeMillis()
+        )
     }
 }
