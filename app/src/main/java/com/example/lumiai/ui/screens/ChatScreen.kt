@@ -61,7 +61,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
 
 @Composable
 fun ChatBubble(message: ChatMessage) {
-    val bubbleColor = if (message.isUser) Color(0xFFDCF8C6) else Color(0xFFEDEDED)
+    val bubbleColor = if (message.isUser) Color(0xFFBEB5B4) else Color(0xFFFBD977)
     val alignment = if (message.isUser) Arrangement.End else Arrangement.Start
 
     Row(
