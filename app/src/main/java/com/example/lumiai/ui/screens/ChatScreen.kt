@@ -11,9 +11,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.lumiai.data.database.ChatMessage
 import com.example.lumiai.utils.NetworkObserver
 import com.example.lumiai.viewmodel.ChatViewModel
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +42,20 @@ fun ChatScreen(
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Lumi AI") }) },
+        topBar = {
+            TopAppBar(
+                title = { Text("Lumi AI") },
+                actions = {
+                    Image(
+                        painter = rememberAsyncImagePainter("image url here"),
+                        contentDescription = "Profile picture",
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                    )
+                }
+            )
+        },
         bottomBar = {
             Row(
                 modifier = Modifier
