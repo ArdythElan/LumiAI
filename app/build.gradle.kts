@@ -91,6 +91,10 @@ dependencies {
     // Logging
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
+    // Icons
+    implementation("androidx.compose.material:material-icons-extended")
+
+
 
     // Tests
     testImplementation("junit:junit:4.13.2")

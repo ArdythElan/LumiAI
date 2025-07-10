@@ -20,6 +20,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Info
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,17 +52,38 @@ fun ChatScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 8.dp),
+                    .padding(top = 8.dp, bottom = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Rechtsboven: settings & about icons
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(onClick = { navController.navigate("settings") }) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
+                    }
+                    IconButton(onClick = { navController.navigate("about") }) {
+                        Icon(Icons.Filled.Info, contentDescription = "About")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Profielfoto (gecached via Coil)
                 Image(
                     painter = rememberAsyncImagePainter("https://raw.githubusercontent.com/ArdythElan/LumiAI/refs/heads/main/assets/LumiAI%20Profile%20picture.png"),
                     contentDescription = "Profile picture",
                     modifier = Modifier
-                        .size(96.dp)   // echt groot!
+                        .size(96.dp)
                         .clip(CircleShape)
                 )
+
                 Spacer(modifier = Modifier.height(4.dp))
+
+                // Naam
                 Text(
                     text = "Lumi AI",
                     style = MaterialTheme.typography.titleLarge
